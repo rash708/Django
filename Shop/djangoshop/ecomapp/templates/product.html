@@ -1,0 +1,49 @@
+{%extends 'base.html'%}
+
+{%block content%}
+    <div class="container">
+      <h1 class="my-4 col-md-8">{{ product.title }}</h1>
+
+      <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+          <img class="img-fluid" src='{{ product.image.url }}' style="width: 400px; height: 100%">
+        </div>
+
+        <div class="col-md-4">
+          <h3 class="my-3">Бренд</h3>
+          <p>{{ product.brand }}</p>
+          <h3 class="my-3">Описание товара</h3>
+          <p>{{ product.description }}.</p>
+          <h3 class="my-3">Цена:</h3>
+            <p><strong>{{ product.price }} руб. </strong></p>
+            <a href="{% url 'add_to_cart'  %}" class="add_to_cart" data-slug='{{ product.slug }}'>
+                <button class="btn btn-danger">Добавить в корзину</button>
+            </a>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('.add_to_cart').on('click', function(e) {
+            e.preventDefault()
+            product_slug = $(this).attr('data-slug')
+            data = {
+                product_slug: product_slug
+            }
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'add_to_cart' %}',
+                data: data,
+                success: function (data) {
+                    $('#cart_count').html(data.cart_total)
+                }
+            })
+        })
+    })
+
+    </script>
+{%endblock content%}
